@@ -8,6 +8,8 @@ from plex.shared.exceptions.source import SourceFileNotFoundError
 
 
 class SourceCollection:
+    """Performs mongodb operations on the sources collection."""
+
     @classmethod
     async def retrieve_all(cls, app: Sanic) -> list[SourceFile]:
         collection: AsyncIOMotorCollection = app.ctx.motor_db[SOURCE_COLLECTION]

@@ -12,6 +12,11 @@ from plex.core.constants import SOURCE_COLLECTION
 
 
 class MongoMigrations:
+    """Runs mongodb migrations to create required collections and indexes on server start.
+
+    Uses a context manager pattern to ensure the connection is properly closed after execution
+    """
+
     def __init__(
         self,
         connection_string: str = MONGO_URI,

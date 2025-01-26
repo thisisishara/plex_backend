@@ -2,6 +2,7 @@ from plex.cli import plex_cli
 
 
 def run() -> None:
+    """Runs the CLI on entrypoint script execution."""
     plex_cli()
 
 
