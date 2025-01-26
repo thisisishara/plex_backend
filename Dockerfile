@@ -6,8 +6,8 @@ ENV POETRY_VIRTUALENVS_CREATE=false
 
 WORKDIR /app
 
-COPY ./pyproject.toml /app/
-RUN poetry install --no-root
+COPY poetry.lock pyproject.toml /app/
+RUN poetry install --no-root --no-ansi
 
 COPY ./plex/ /app/
 RUN poetry build
