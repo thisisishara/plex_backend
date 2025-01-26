@@ -24,7 +24,6 @@ sanic-ext = "^23.12.0"
 langchain-openai = "^0.1.23"
 markitdown = "^0.0.1a3"
 motor = "^3.6.1"
-scikit-learn = "^1.6.1"
 pandas = "^2.2.3"
 
 [build-system]
