@@ -11,7 +11,7 @@ WORKDIR /app
 COPY poetry.lock pyproject.toml /app/
 RUN poetry install --no-root --no-ansi
 
-COPY ./plex/ /app/
+COPY . /app/
 RUN poetry build
 
 RUN pip install dist/*.whl && rm -rf dist
