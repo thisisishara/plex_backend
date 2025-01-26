@@ -1,38 +1,44 @@
-import os
-from datetime import UTC
 from datetime import datetime
+from datetime import UTC
 
 from sanic import HTTPResponse
 from sanic import Request
-from sanic import Sanic
 from sanic import response
+from sanic import Sanic
 
 from plex.api.v1.routes import v1_routes
-from plex.core.db.utils import SanicInMemoryDatabase
+from plex.core.constants import ACCESS_LOG
+from plex.core.constants import CORS_ORIGIN_STR
+from plex.core.constants import DEBUG_MODE
+from plex.core.constants import HOST
+from plex.core.constants import MONGO_DB
+from plex.core.constants import MONGO_URI
+from plex.core.constants import PORT
+from plex.core.constants import WORKERS
+from plex.core.db.utils import SanicMotor
+from plex.core.utils import build_cors_origins
 
 
 def create_app(app_name: str) -> Sanic:
     app = Sanic(app_name, strict_slashes=False)
 
+    # setting Sanic app configs
+    app.config.HOST = HOST
+    app.config.PORT = PORT
+    app.config.WORKERS = WORKERS
+    app.config.ACCESS_LOG = ACCESS_LOG
+    app.config.DEBUG_MODE = DEBUG_MODE
+    app.config.DEBUG_MODE = DEBUG_MODE
+    app.config.DEBUG_MODE = DEBUG_MODE
+    # setting cors origin configs
+    app.config.CORS_ORIGINS = build_cors_origins(CORS_ORIGIN_STR)
+    # motor configs
+    app.config.MONGO_URI = MONGO_URI
+    app.config.MONGO_DB = MONGO_DB
+
     # wrap Sanic app with an
     # in memory database client
-    SanicInMemoryDatabase(app=app)
-
-    # # wrap Sanic app with a
-    # # Qdrant async client
-    # SanicQdrant(app=app)
-
-    # setting Sanic app configs
-    app.config.HOST = os.environ.get("PLEX_ROUTER_HOST", "0.0.0.0")
-    app.config.PORT = int(os.environ.get("PLEX_ROUTER_PORT", 8000))
-    app.config.WORKERS = int(os.environ.get("PLEX_ROUTER_WORKERS", 2))
-    app.config.ACCESS_LOG = str(os.environ.get("PLEX_ROUTER_ACCESS_LOG", "false")).lower() == "true"
-    app.config.DEBUG_MODE = str(os.environ.get("PLEX_ROUTER_DEBUG_MODE", "true")).lower() == "true"
-
-    # setting cors origin configs
-    cors_origin_str = str(os.environ.get("PLEX_ROUTER_CORS_ORIGIN", "*")).strip()
-    origin_list = [str(origin).strip() for origin in cors_origin_str.split(",")]
-    app.config.CORS_ORIGINS = "*" if "*" in origin_list else origin_list[0] if len(origin_list) == 1 else origin_list
+    SanicMotor().init_app(app=app)
 
     # noinspection PyUnusedLocal
     @app.get("/")

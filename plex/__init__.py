@@ -1,7 +1,7 @@
 from plex.cli import plex_cli
 
 
-def run():
+def run() -> None:
     plex_cli()
 
 

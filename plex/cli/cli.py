@@ -1,26 +1,44 @@
+import importlib
+import os.path
+from functools import partial
+
 import click
+from dotenv import load_dotenv
 from sanic import Sanic
 from sanic.log import logger
 from sanic.worker.loader import AppLoader
 
 from plex.api import create_app
+from plex.core.constants import PACKAGE_NAME
 
 
 @click.group()
 def plex_cli() -> None:
-    """CLI entrypoint"""
+    """CLI entrypoint."""
 
 
 # noinspection PyBroadException
 @plex_cli.command()
 def run() -> None:
-    """Runs the Sanic Server"""
+    """Runs the Sanic Server."""
 
     try:
         click.echo("▶️ Starting the API Server...")
-        from functools import partial
 
-        loader = AppLoader(factory=partial(create_app, "plex_api"))
+        if os.path.isfile(".env"):
+            from plex.core import constants
+
+            click.echo("🔄️ Loading .env variables...")
+            load_dotenv(".env")
+            importlib.reload(constants)
+
+        from plex.shared.db.migrations import MongoMigrations
+
+        click.echo("♾️ Running MongoDB Migrations...")
+        with MongoMigrations() as migrations:
+            migrations.run()
+
+        loader = AppLoader(factory=partial(create_app, PACKAGE_NAME))
         app = loader.load()
 
         app.prepare(
