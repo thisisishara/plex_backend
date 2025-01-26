@@ -3,12 +3,10 @@ from io import BytesIO
 from io import StringIO
 from typing import Any
 
+import numpy as np
 import pandas as pd
 from markitdown import MarkItDown
 from sanic.request import File
-from sklearn.metrics import f1_score
-from sklearn.metrics import precision_score
-from sklearn.metrics import recall_score
 
 from plex.shared.exceptions.results import ColumnCountMismatchError
 from plex.shared.exceptions.results import CSVParsingError
@@ -73,6 +71,24 @@ def convert_data_to_dict(data: list[list[str]]) -> dict[str, str]:
             data_dict[key] = cleaned_value or "-"
 
     return data_dict
+
+
+def precision_score(y_true: list[int], y_pred: list[int]) -> float:
+    true_positives = np.sum((np.array(y_true) == 1) & (np.array(y_pred) == 1))
+    predicted_positives = np.sum(y_pred)
+    return true_positives / predicted_positives if predicted_positives > 0 else 0
+
+
+def recall_score(y_true: list[int], y_pred: list[int]) -> float:
+    true_positives = np.sum((np.array(y_true) == 1) & (np.array(y_pred) == 1))
+    actual_positives = np.sum(y_true)
+    return true_positives / actual_positives if actual_positives > 0 else 0
+
+
+def f1_score(y_true: list[int], y_pred: list[int]) -> float:
+    precision = precision_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred)
+    return 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0
 
 
 def evaluate_extracted_vs_reference(
