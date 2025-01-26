@@ -30,6 +30,9 @@ def save_profit_and_loss_statement(
 
 
 class ReportAnalyzer:
+    """Given a source financial document, attempts to extract the Profit and Loss statement using forced tool-
+    calling."""
+
     def __init__(self) -> None:
         set_verbose(DEBUG_MODE)
         set_debug(DEBUG_MODE)
@@ -47,6 +50,19 @@ class ReportAnalyzer:
         quarter: str,
         selected_extraction: bool,
     ) -> list[list[Any]]:
+        """Attempts to extract the Profit and Loss statement from the source document using forced tool-calling using a
+        langchain based tool.
+
+        Args:
+            source (dict): source document metadata, including its content
+            quarter (str): quarter which the P&L should be extracted from
+            selected_extraction (bool): whether to perform a selective extraction or not
+
+        Returns:
+            list[list[Any]]: A list of lists representing the extracted P&L statement.
+                            Each inner list corresponds to a row in the P&L statement.
+        """
+
         llm_with_tools = self._llm.bind_tools(
             [save_profit_and_loss_statement],
             tool_choice="save_profit_and_loss_statement",

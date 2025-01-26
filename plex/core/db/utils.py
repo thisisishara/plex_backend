@@ -9,6 +9,8 @@ MONGO_DB_CONFIG_NAME = "MONGO_DB"
 
 
 class SanicMotor:
+    """Wraps sanic app with an async motor client."""
+
     motor_aioclient: AsyncIOMotorClient
     app: Sanic
     mongo_url: str
