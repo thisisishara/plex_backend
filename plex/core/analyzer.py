@@ -3,8 +3,8 @@ from datetime import UTC
 from typing import Annotated
 from typing import Any
 
-from langchain.globals import set_debug
-from langchain.globals import set_verbose
+from langchain_core.globals import set_debug
+from langchain_core.globals import set_verbose
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
 
