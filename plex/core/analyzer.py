@@ -14,6 +14,7 @@ from plex.core.constants import DEEPSEEK_LLM_MODEL
 from plex.core.constants import EXTRACTOR_PROMPT
 from plex.core.constants import LLM_MAX_TOKENS
 from plex.core.constants import LLM_TEMPERATURE
+from plex.core.constants import PLEX_DEEPSEEK_BASE_URL
 from plex.core.langchain.llm import get_llm
 from plex.core.types import ResultFile
 from plex.core.types import SourceFile
@@ -30,7 +31,7 @@ def save_profit_and_loss_statement(
 
 
 class ReportAnalyzer:
-    """Given a source financial document, attempts to extract the Profit and Loss statement using forced tool-
+    """Given a source financial document, attempts to extract the Profit and Loss statement using forced tool
     calling."""
 
     def __init__(self) -> None:
@@ -42,6 +43,7 @@ class ReportAnalyzer:
             api_key=DEEPSEEK_API_KEY,
             temperature=LLM_TEMPERATURE,
             max_tokens=LLM_MAX_TOKENS,
+            base_url=PLEX_DEEPSEEK_BASE_URL,
         )
 
     async def _extract_profit_and_loss(

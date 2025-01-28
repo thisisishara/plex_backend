@@ -5,12 +5,13 @@ from sanic.log import logger
 from plex.shared.exceptions.analyzer import AnalyzerInitializationError
 
 
-def get_llm(llm_model: str, api_key: str, temperature: float, max_tokens: int) -> BaseChatModel:
+def get_llm(llm_model: str, api_key: str, base_url: str, temperature: float, max_tokens: int) -> BaseChatModel:
     """Returns a Langchain LLM wrapper for the Deepseek model based on the specified configurations.
 
     Args:
         llm_model (str): The name of the Deepseek model to use (e.g., "deepseek-chat").
         api_key (str): The API key for authenticating requests to the Deepseek API.
+        base_url (str): The base URL of the Deepseek API.
         temperature (float): The sampling temperature for the model.
         max_tokens (int): The maximum number of tokens the model is allowed to generate.
 
@@ -28,7 +29,7 @@ def get_llm(llm_model: str, api_key: str, temperature: float, max_tokens: int) -
             model=llm_model,
             temperature=temperature,
             openai_api_key=api_key,
-            openai_api_base="https://api.deepseek.com",
+            openai_api_base=base_url,
             max_tokens=max_tokens,
             n=1,
         )
